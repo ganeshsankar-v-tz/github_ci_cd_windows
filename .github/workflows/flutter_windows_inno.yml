@@ -28,7 +28,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Windows Release
-        run: flutter build windows --release
+        run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
       - name: Install Inno Setup
         run: |
