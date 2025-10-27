@@ -1,0 +1,57 @@
+class WarpExcessModel {
+  int? warpDesignId;
+  String? warpName;
+  String? warpType;
+  String? warpId;
+  int? balanceQty;
+  num? balanceMeter;
+  String? emptyType;
+  int? emptyQty;
+  int? sheet;
+  String? warpColor;
+
+  WarpExcessModel(
+      {this.warpDesignId,
+      this.warpName,
+      this.warpType,
+      this.warpId,
+      this.balanceQty,
+      this.balanceMeter,
+      this.emptyType,
+      this.emptyQty,
+      this.sheet,
+      this.warpColor});
+
+  WarpExcessModel.fromJson(Map<String, dynamic> json) {
+    warpDesignId = json['warp_design_id'];
+    warpName = json['warp_name'];
+    warpType = json['warp_type'];
+    warpId = json['warp_id'];
+    balanceQty = json['balance_qty'];
+    balanceMeter = json['balance_meter'];
+    emptyType = json['empty_type'];
+    emptyQty = json['empty_qty'];
+    sheet = json['sheet'];
+    warpColor = json['warp_color'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['warp_design_id'] = warpDesignId;
+    data['warp_name'] = warpName;
+    data['warp_type'] = warpType;
+    data['warp_id'] = warpId;
+    data['balance_qty'] = balanceQty;
+    data['balance_meter'] = balanceMeter;
+    data['empty_type'] = emptyType;
+    data['empty_qty'] = emptyQty;
+    data['sheet'] = sheet;
+    data['warp_color'] = warpColor;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return "$warpName";
+  }
+}
