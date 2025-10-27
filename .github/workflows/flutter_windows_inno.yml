@@ -2,9 +2,11 @@ name: Flutter Windows CI/CD with Inno Setup
 
 on:
   push:
-    branches: [main]
+    branches:
+    - main
   pull_request:
-    branches: [main]
+    branches:
+    - main
 
 jobs:
   build_windows_installer:
