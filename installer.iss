@@ -4,7 +4,7 @@
 ; ==============================================
 
 #define MyAppName "Ab tex"
-#define MyAppVersion "1.0.96"
+#define MyAppVersion GetEnv("BUILD_VERSION")
 #define MyAppPublisher "Tamilzorous"
 #define MyAppExeName "abtex.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -59,6 +59,4 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 ; --- Launch App After Install ---
-Filename: "{app}\{#MyAppExeName}"
-Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
-Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

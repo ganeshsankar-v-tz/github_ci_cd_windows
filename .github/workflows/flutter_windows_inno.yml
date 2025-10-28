@@ -2,11 +2,9 @@ name: Flutter Windows CI/CD with Inno Setup
 
 on:
   push:
-    branches:
-    - main
+    branches: [ main ]
   pull_request:
-    branches:
-    - main
+    branches: [ main ]
 
 jobs:
   build_windows_installer:
@@ -21,25 +19,37 @@ jobs:
         with:
           flutter-version: "3.29.3"
 
+      - name: Enable Windows Desktop
+        run: flutter config --enable-windows-desktop
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build Windows Release
         run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
-      # 5️⃣ Install Inno Setup Compiler
+      # Get Version from Git Tag or Commit
+      - name: Get Version
+        id: get_version
+        run: |
+          $tag = git describe --tags --abbrev=0 2>$null
+          if (-not $tag) { $tag = "1.0.0" }
+          echo "BUILD_VERSION=$tag" >> $env:GITHUB_ENV
+
+      # Install Inno Setup
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
 
+      # Create Installer (passes version via env var)
       - name: Create Windows installer
-        run: |
-         & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer.iss"
+        run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
+        shell: cmd
+        env:
+          BUILD_VERSION: ${{ env.BUILD_VERSION }}
 
-      # Upload installer as artifact
+      # Upload Installer
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ABTEX_Windows_Installer
-          path: |
-            ./Output/*.exe
-            ./ab tex/*.exe
+          path: dist/*.exe
