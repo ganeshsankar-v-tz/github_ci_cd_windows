@@ -27,17 +27,17 @@ jobs:
       - name: Build Windows Release
         run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
-      - name: Install Inno Setup
+      # Inno Setup step
+      - name: Build Windows Installer (Inno Setup)
         run: |
-          choco install innosetup --yes
-          echo "✅ Inno Setup installed successfully"
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer.iss"
+        shell: pwsh
 
-      - name: Create Installer
-        run: |
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
-
-      - name: Upload Windows Installer
+      # Upload installer as artifact
+      - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ab-tex-installer
-          path: dist/ab_tex_setup.exe
+          name: ABTEX_Windows_Installer
+          path: |
+            ./Output/*.exe
+            ./ab tex/*.exe
