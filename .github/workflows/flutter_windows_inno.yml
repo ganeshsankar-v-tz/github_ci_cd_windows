@@ -32,9 +32,16 @@ jobs:
       - name: Get Version
         id: get_version
         run: |
-          $tag = git describe --tags --abbrev=0 2>$null
-          if (-not $tag) { $tag = "1.0.0" }
-          echo "BUILD_VERSION=$tag" >> $env:GITHUB_ENV
+          $tag = (git describe --tags --abbrev=0 2>$null)
+          if (-not $tag) {
+            # Fallback: use package version from pubspec.yaml or a default
+            $version = (Select-String -Path pubspec.yaml -Pattern '^version:\s*(.+)$').Matches.Groups[1].Value
+            if (-not $version) { $version = "1.0.0" }
+            $tag = $version
+          }
+          echo "BUILD_VERSION=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "Using version $tag"
+        shell: pwsh
 
       # Install Inno Setup
       - name: Install Inno Setup
