@@ -27,7 +27,6 @@ jobs:
       - name: Build Windows Release
         run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
-      # Inno Setup step
       - name: Build Windows Installer (Inno Setup)
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer.iss"
