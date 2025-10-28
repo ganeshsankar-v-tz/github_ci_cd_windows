@@ -4,7 +4,7 @@
 ; ==============================================
 
 #define MyAppName "Ab tex"
-#define MyAppVersion GetEnv("BUILD_VERSION")
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Tamilzorous"
 #define MyAppExeName "abtex.exe"
 #define MyAppAssocName MyAppName + " File"
