@@ -28,7 +28,7 @@ PrivilegesRequired=admin
 
 ; --- Output ---
 OutputDir=dist
-OutputBaseFilename=abtex_installer
+OutputBaseFilename=ABTex_Installer_{#MyAppVersion}_x64
 SetupIconFile=assets\ab_textile_logo.ico
         Compression=lzma
 SolidCompression=yes
