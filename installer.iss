@@ -3,7 +3,7 @@
 ; Compatible with local + GitHub Actions CI/CD build
 ; ==============================================
 
-#define MyAppName "Ab tex"
+#define MyAppName "Ab Tex"
 #define MyAppVersion GetEnv("APP_VERSION")
 #define MyAppPublisher "Tamilzorous"
 #define MyAppExeName "abtex.exe"

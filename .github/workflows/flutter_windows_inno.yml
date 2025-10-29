@@ -57,5 +57,5 @@ jobs:
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ABTEX_Windows_Installer
+          name: ABTEX_Windows_Installer_"${{ env.APP_VERSION }}"
           path: dist/*.exe
