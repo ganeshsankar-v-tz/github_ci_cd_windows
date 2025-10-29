@@ -36,7 +36,8 @@ jobs:
         shell: pwsh
         run: |
           $version = (yq eval '.version' pubspec.yaml)
-          echo "APP_VERSION=$version" >> $env:GITHUB_ENV
+          $safeVersion = $version -replace '\+', '_'   # replace + with underscore
+          echo "APP_VERSION=$safeVersion" >> $env:GITHUB_ENV
 
       # ✅ Build Windows release
       - name: Build Windows Release
@@ -59,3 +60,4 @@ jobs:
         with:
           name: ABTEX_Windows_Installer_${{ env.APP_VERSION }}
           path: dist/*.exe
+          if-no-files-found: warn
