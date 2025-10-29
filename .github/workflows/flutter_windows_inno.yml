@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Install yq (if not using subosito/flutter-action with flutter-version-file)
+        run: sudo snap install yq # or other installation method for yq
+
       - name: Get app version
         id: get_version
         run: echo "APP_VERSION=$(yq -r .version pubspec.yaml)" >> $GITHUB_ENV
