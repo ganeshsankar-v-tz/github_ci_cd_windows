@@ -25,6 +25,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Get app version
+        id: get_version
+        run: echo "APP_VERSION=$(yq -r .version pubspec.yaml)" >> $GITHUB_ENV
+
       - name: Build Windows Release
         run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
@@ -37,7 +41,7 @@ jobs:
         run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
         shell: cmd
         env:
-          BUILD_VERSION: ${{ env.BUILD_VERSION }}
+          BUILD_VERSION: ${{ env.APP_VERSION }}
 
       # Upload Installer
       - name: Upload Installer Artifact
