@@ -25,28 +25,35 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Install yq (if not using subosito/flutter-action with flutter-version-file)
-        run: sudo snap install yq # or other installation method for yq
+      # ✅ Install yq properly on Windows
+      - name: Install yq
+        shell: pwsh
+        run: choco install yq -y
 
+      # ✅ Get app version from pubspec.yaml
       - name: Get app version
         id: get_version
-        run: echo "APP_VERSION=$(yq -r .version pubspec.yaml)" >> $GITHUB_ENV
+        shell: pwsh
+        run: |
+          $version = (yq eval '.version' pubspec.yaml)
+          echo "APP_VERSION=$version" >> $env:GITHUB_ENV
 
+      # ✅ Build Windows release
       - name: Build Windows Release
         run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
-      # Install Inno Setup
+      # ✅ Install Inno Setup
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
 
-      # Create Installer (passes version via env var)
+      # ✅ Create Windows installer with version
       - name: Create Windows installer
-        run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
         shell: cmd
+        run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
         env:
           BUILD_VERSION: ${{ env.APP_VERSION }}
 
-      # Upload Installer
+      # ✅ Upload Installer Artifact
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
