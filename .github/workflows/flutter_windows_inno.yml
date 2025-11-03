@@ -18,6 +18,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.29.3"
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
@@ -35,7 +36,8 @@ jobs:
         id: get_version
         shell: pwsh
         run: |
-          $version = (yq r pubspec.yaml version)
+          $version = (yq eval '.version' pubspec.yaml)
+          $version = "$version".Trim('"')   # remove quotes if any
           $safeVersion = $version -replace '\+', '_'
           echo "APP_VERSION=$safeVersion" >> $env:GITHUB_ENV
 
