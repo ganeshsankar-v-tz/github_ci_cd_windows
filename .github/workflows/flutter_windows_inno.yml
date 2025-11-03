@@ -35,7 +35,7 @@ jobs:
         id: get_version
         shell: pwsh
         run: |
-          $version = (yq eval '.version | @str' pubspec.yaml)
+          $version = (yq r pubspec.yaml version)
           $safeVersion = $version -replace '\+', '_'
           echo "APP_VERSION=$safeVersion" >> $env:GITHUB_ENV
 
