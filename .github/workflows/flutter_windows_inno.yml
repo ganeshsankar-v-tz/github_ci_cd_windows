@@ -19,24 +19,24 @@ jobs:
         with:
           flutter-version: "3.29.3"
 
-      - name: Enable Windows Desktop
-        run: flutter config --enable-windows-desktop
-
       - name: Install dependencies
         run: flutter pub get
 
-      # ✅ Install yq properly on Windows
-      - name: Install yq
+      - name: Install yq (v4)
         shell: pwsh
-        run: choco install yq -y
+        run: |
+          choco uninstall yq -y
+          curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_windows_amd64.exe -o yq.exe
+          mkdir C:\yq
+          move yq.exe C:\yq\yq.exe
+          echo "C:\yq" >> $env:GITHUB_PATH
 
-      # ✅ Get app version from pubspec.yaml
       - name: Get app version
         id: get_version
         shell: pwsh
         run: |
           $version = (yq eval '.version | @str' pubspec.yaml)
-          $safeVersion = $version -replace '\+', '_'   # replace + with underscore
+          $safeVersion = $version -replace '\+', '_'
           echo "APP_VERSION=$safeVersion" >> $env:GITHUB_ENV
 
       # ✅ Build Windows release
