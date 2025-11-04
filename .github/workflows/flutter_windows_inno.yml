@@ -5,6 +5,16 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:  # ✅ allows manual trigger with custom inputs
+    inputs:
+      release_comments:
+        description: "Enter release notes or comments"
+        required: true
+        default: "New version release"
+
+env:
+  # ✅ dynamic comment input — will use manual input or fallback
+  RELEASE_COMMENTS: ${{ github.event.inputs.release_comments || 'Automatic release build' }}
 
 jobs:
   build_windows_installer:
@@ -37,26 +47,22 @@ jobs:
         shell: pwsh
         run: |
           $version = (yq eval '.version' pubspec.yaml)
-          $version = "$version".Trim('"')   # remove quotes if any
+          $version = "$version".Trim('"')
           $safeVersion = $version -replace '\+', '_'
           echo "APP_VERSION=$safeVersion" >> $env:GITHUB_ENV
 
-      # ✅ Build Windows release
       - name: Build Windows Release
         run: flutter build windows -t lib/main.dart --dart-define=FLAVOR=dev
 
-      # ✅ Install Inno Setup
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y
 
-      # ✅ Create Windows installer with version
       - name: Create Windows installer
         shell: cmd
         run: '"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss'
         env:
           BUILD_VERSION: ${{ env.APP_VERSION }}
 
-      # ✅ Upload Installer Artifact
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -64,7 +70,7 @@ jobs:
           path: dist/*.exe
           if-no-files-found: warn
 
-      # ✅ Upload to Private API
+      # ✅ Upload all .exe builds to your private API with dynamic comments
       - name: Upload Build to Private API
         shell: pwsh
         run: |
