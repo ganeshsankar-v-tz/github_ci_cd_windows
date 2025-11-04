@@ -63,3 +63,24 @@ jobs:
           name: ABTEX_Windows_Installer_${{ env.APP_VERSION }}
           path: dist/*.exe
           if-no-files-found: warn
+
+      # ✅ Upload to Private API
+      - name: Upload Build to Private API
+        shell: pwsh
+        run: |
+          $version = "${{ env.APP_VERSION }}"
+          $comments = "Warp or yarn delivery dropdown issue fixed"
+
+          # Find the generated .exe file path
+          $exeFile = Get-ChildItem -Path dist -Filter *.exe | Select-Object -First 1
+
+          if (-not $exeFile) {
+            Write-Error "❌ No installer .exe file found in dist folder"
+            exit 1
+          }
+
+          # Run cURL command
+          curl --location 'http://dev-apiabtex.tamilzorous.com/api/version_controller_uplode' `
+            --form "zip_file=@$($exeFile.FullName)" `
+            --form "version=$version" `
+            --form "comments=$comments"
