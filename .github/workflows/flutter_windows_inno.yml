@@ -69,7 +69,9 @@ jobs:
         shell: pwsh
         run: |
           $version = "${{ env.APP_VERSION }}"
-          $comments = "Warp or yarn delivery dropdown issue fixed"
+          # remove trailing underscore and everything after (e.g. 1.0.1_1 -> 1.0.1)
+          $version = ($version -split '_')[0]
+          $comments = "${{ env.RELEASE_COMMENTS }}"
 
           # Find the generated .exe file path
           $exeFile = Get-ChildItem -Path dist -Filter *.exe | Select-Object -First 1
